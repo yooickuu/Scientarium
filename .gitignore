@@ -1,0 +1,24 @@
+node_modules/
+.next/
+.netlify/
+data/
+backups/
+.env*
+!.env.example
+*.tsbuildinfo
+*.log
+.DS_Store
+
+private/
+
+.tools/
+
+.pages-build/
+out/
+
+preview-link.txt
+delivery/
+
+# Local handoff notes; never publish conversation history.
+PROGRESS.md
+PROJECT_OVERVIEW.md

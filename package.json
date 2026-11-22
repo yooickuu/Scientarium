@@ -1,0 +1,45 @@
+{
+  "name": "kmu-med-events",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "admin:setup": "node --import tsx scripts/setup-admin.ts",
+    "db:backup": "node --import tsx scripts/backup-db.ts",
+    "check:production": "node --import tsx scripts/check-production.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "preview:share": "node scripts/preview-share.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
+    "test:supabase": "node --test tests/supabase/*.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.2.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^14.14.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.73.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "^3.7.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.17",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.23.15",
+    "typescript": "^5.5.4"
+  }
+}
