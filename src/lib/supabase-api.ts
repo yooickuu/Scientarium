@@ -7,6 +7,7 @@ function fail(error: { message: string; code?: string; status?: number }) {
   const known = ['nicknameCooldown','nicknameTaken','nicknameRules','imageError','invalidInput','forbidden','loginRequired','notFound','ownerProtected','alreadyExists'];
   const code = known.find(value => error.message.includes(value));
   if (code) throw new ApiError(code, code === 'loginRequired' ? 401 : code === 'forbidden' || code === 'ownerProtected' ? 403 : code === 'notFound' ? 404 : 400);
+  if (error.code === 'PGRST202') throw new ApiError('serviceUnavailable',503);
   if (error.code === '23505') throw new ApiError('alreadyExists', 409);
   if (error.code === '42501') throw new ApiError('forbidden', 403);
   if (error.code === 'invalid_credentials') throw new ApiError('loginError', 401);
@@ -62,6 +63,8 @@ export async function supabaseApi(input: string, options: RequestInit = {}): Pro
   if (path === '/api/admin/users') return method === 'GET'
     ? {users: await rpc('admin_users', {}, options.signal)}
     : await rpc('set_user_role', {target_email: body.email, new_role: body.role});
+  if (path === '/api/admin/backup') return rpc(method === 'GET' ? 'backup_status' : 'download_backup', {}, options.signal);
+  if (path === '/api/admin/backup/restore') return rpc('restore_deleted_record', {revision_id:body.revision_id});
   if (path === '/api/admin/stats') return {stats: await rpc('admin_stats', {period_days: Number(url.searchParams.get('days')) || 30}, options.signal)};
   if (path === '/api/analytics') return rpc('record_visit', {page_path: body.path, view_key: body.view_id, session_key: body.session_id, device_type: body.device});
 

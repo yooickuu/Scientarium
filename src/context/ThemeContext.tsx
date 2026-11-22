@@ -13,11 +13,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
-  const [mounted, setMounted] = useState(false);
+
 
   useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem('medevent_theme') as Theme | null;
+    let stored: string | null = null;
+    try { stored = localStorage.getItem('medevent_theme'); } catch {}
     if (stored === 'dark' || stored === 'light') {
       setTheme(stored);
       if (stored === 'dark') {
@@ -34,7 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const toggleTheme = () => {
     const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    localStorage.setItem('medevent_theme', nextTheme);
+    try { localStorage.setItem('medevent_theme', nextTheme); } catch {}
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {

@@ -14,7 +14,7 @@ export default function Navbar() {
   const { user, openAuthModal } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { locale, setLocale, t } = useLanguage();
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/\/$/,'') || '/';
 
   return (
     <header className="site-header">

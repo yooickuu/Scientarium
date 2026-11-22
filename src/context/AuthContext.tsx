@@ -12,7 +12,7 @@ const AuthContext=createContext<AuthContextType|undefined>(undefined);
 export function AuthProvider({children}:{children:React.ReactNode}){
  const [user,setUser]=useState<User|null>(null);const [loading,setLoading]=useState(true);
  const [isAuthModalOpen,setOpen]=useState(false);const [authModalMode,setMode]=useState<'login'|'register'>('login');
- const refreshUser=useCallback(async()=>{try{setUser((await api('/api/auth/me')).user||null);}catch{setUser(null);}finally{setLoading(false);}},[]);
+ const refreshUser=useCallback(async()=>{try{setUser((await api('/api/auth/me')).user||null);}catch{/* A transient network error must not clear a valid session or unsaved form. */}finally{setLoading(false);}},[]);
  useEffect(()=>{
   void refreshUser();let alive=true;let unsubscribe:(()=>void)|undefined;
   if(usesSupabase)import('@/lib/supabase').then(({getSupabase})=>{

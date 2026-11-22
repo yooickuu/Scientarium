@@ -1,5 +1,18 @@
 import {Locale, MedicalEvent, University} from '@/types';
 export const messages = {
+ backups:['Резервные копии','Сақтық көшірмелер','Backups'],
+ backupHint:['Автоматически сохраняются последние 3 ежедневные копии внутри базы. Скачивайте отдельную копию на компьютер перед крупными изменениями и регулярно храните её в безопасном месте вне Supabase.','Базада соңғы 3 күнделікті көшірме автоматты сақталады. Үлкен өзгерістер алдында көшірмені компьютерге жүктеп, Supabase-тен тыс қауіпсіз жерде сақтаңыз.','The database keeps the last 3 daily snapshots. Download a separate copy before major changes and keep regular copies safely outside Supabase.'],
+ backupPrivate:['Копия содержит личные данные. Не публикуйте её в GitHub. Пароли, сессии и отдельные файлы Storage в неё не входят.','Көшірмеде жеке деректер бар. GitHub-та жарияламаңыз. Құпиясөздер, сессиялар және Storage файлдары кірмейді.','The backup contains personal data. Never publish it on GitHub. Auth passwords, sessions and separate Storage files are not included.'],
+ lastBackup:['Последняя копия','Соңғы көшірме','Last snapshot'],
+ downloadBackup:['Скачать текущие данные','Ағымдағы деректерді жүктеу','Download current data'],
+ deletedRecords:['Удалённые записи','Жойылған жазбалар','Deleted records'],
+ restore:['Восстановить','Қалпына келтіру','Restore'],
+ restoreConfirm:['Восстановить запись?','Жазбаны қалпына келтіру керек пе?','Restore this record?'],
+ restoreHint:['Удалённые мероприятия и вузы доступны до 30 дней. Хранятся до 5 последних версий записи. Существующие записи не перезаписываются.','Жойылған іс-шаралар мен ЖОО 30 күнге дейін қолжетімді. Әр жазбаның соңғы 5 нұсқасына дейін сақталады. Бар жазбалар қайта жазылмайды.','Deleted events and universities are available for up to 30 days. Up to 5 versions per record are kept. Existing records are never overwritten.'],
+ noDeleted:['Нет удалённых записей для восстановления','Қалпына келтірілетін жазбалар жоқ','No deleted records to restore'],
+ serviceUnavailable:['Функция пока недоступна. Обратитесь к администратору.','Функция әзірге қолжетімсіз. Әкімшіге хабарласыңыз.','This feature is currently unavailable. Contact the administrator.'],
+
+ pageErrorHint:['Не удалось показать страницу. Попробуйте ещё раз. Сохранённые данные остаются в базе.','Бетті көрсету мүмкін болмады. Қайталап көріңіз. Сақталған деректер базада қалады.','This page could not be displayed. Please try again. Saved data remains in the database.'],
  confirmEmail:['Проверьте почту и перейдите по ссылке для подтверждения аккаунта.','Аккаунтты растау үшін поштадағы сілтемені ашыңыз.','Check your email and follow the confirmation link.'],
  forgotPassword:['Забыли пароль?','Құпиясөзді ұмыттыңыз ба?','Forgot password?'],
  sendRecovery:['Отправить ссылку','Сілтеме жіберу','Send reset link'],

@@ -22,3 +22,6 @@ delivery/
 # Local handoff notes; never publish conversation history.
 PROGRESS.md
 PROJECT_OVERVIEW.md
+
+# Downloaded cloud exports contain personal data.
+scientarium-backup-*.json

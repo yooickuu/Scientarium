@@ -101,3 +101,27 @@ test('Legacy profiles restore only after email confirmation, once, and stay priv
  await assert.rejects(as('user','select * from scientarium_private.legacy_profiles'),/permission denied/);
  await assert.rejects(as('user','select scientarium_private.restore_profile($1)',[id]),/permission denied/);
 });
+test('Backup exports are owner-only; deletion can be restored with bookmarks and snapshots rotate',async()=>{
+ const sql=await readFile(new URL('../../supabase/migrations/002_data_protection.sql',import.meta.url),'utf8');
+ await db.exec(sql.split('-- Supabase scheduler')[0]+'commit;');
+ await assert.rejects(rpc('mod','download_backup',[null]),/forbidden/);
+ await assert.rejects(rpc('user','backup_status'),/forbidden/);
+ const savedEvent=await rpc('owner','save_event',[null,JSON.stringify(event)]);
+ const member=await rpc('user','get_my_profile');
+ await as('user','insert into public.bookmarks(user_id,event_id) values($1,$2)',[member.id,savedEvent.id]);
+ await rpc('owner','delete_event',[savedEvent.id]);
+ const status=await rpc('owner','backup_status');const revision=status.deleted.find(r=>Number(r.record_id)===savedEvent.id);
+ assert.ok(revision);await rpc('owner','restore_deleted_record',[revision.id]);
+ assert.equal((await as(null,'select id from public.events where id=$1',[savedEvent.id])).length,1);
+ assert.equal((await as('user','select * from public.bookmarks where event_id=$1',[savedEvent.id])).length,1);
+ await assert.rejects(rpc('owner','restore_deleted_record',[revision.id]),/notFound/);
+ const university=await rpc('owner','save_university',[null,JSON.stringify({name:'Restore University'})]);
+ await rpc('owner','delete_university',[university.id]);
+ const uniRevision=(await rpc('owner','backup_status')).deleted.find(r=>r.table_name==='universities');
+ await rpc('owner','restore_deleted_record',[uniRevision.id]);
+ assert.equal((await as(null,'select id from public.universities where id=$1',[university.id])).length,1);
+ const backup=await rpc('owner','download_backup',[null]);assert.equal(backup.format,'scientarium-application-backup-v1');assert.ok(backup.tables['public.profiles'].length);
+ for(let i=0;i<4;i++)await db.exec('select scientarium_private.create_daily_backup()');
+ assert.equal((await rpc('owner','backup_status')).snapshots,3);
+ await assert.rejects(as('user','select * from scientarium_private.backups'),/permission denied/);
+});
