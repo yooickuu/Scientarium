@@ -1,5 +1,8 @@
 import {Locale, MedicalEvent, University} from '@/types';
 export const messages = {
+ urlTooLong:['Ссылка слишком длинная: максимум 2000 символов. Используйте короткую ссылку организатора.','Сілтеме тым ұзын: ең көбі 2000 таңба. Ұйымдастырушының қысқа сілтемесін пайдаланыңыз.','The URL is too long (maximum 2000 characters). Use the organizer’s short link.'],
+ checkLinks:['Проверьте ссылки: ошибка указана рядом с полем.','Сілтемелерді тексеріңіз: қате өрістің жанында көрсетілген.','Check the links: the error is shown beside the field.'],
+ linkHint:['Необязательно. Можно вставить адрес без https:// — добавим автоматически.','Міндетті емес. Мекенжайды https:// префиксінсіз енгізуге болады — оны автоматты түрде қосамыз.','Optional. Paste an address without https:// and we will add it automatically.'],
  backups:['Резервные копии','Сақтық көшірмелер','Backups'],
  backupHint:['Автоматически сохраняются последние 3 ежедневные копии внутри базы. Скачивайте отдельную копию на компьютер перед крупными изменениями и регулярно храните её в безопасном месте вне Supabase.','Базада соңғы 3 күнделікті көшірме автоматты сақталады. Үлкен өзгерістер алдында көшірмені компьютерге жүктеп, Supabase-тен тыс қауіпсіз жерде сақтаңыз.','The database keeps the last 3 daily snapshots. Download a separate copy before major changes and keep regular copies safely outside Supabase.'],
  backupPrivate:['Копия содержит личные данные. Не публикуйте её в GitHub. Пароли, сессии и отдельные файлы Storage в неё не входят.','Көшірмеде жеке деректер бар. GitHub-та жарияламаңыз. Құпиясөздер, сессиялар және Storage файлдары кірмейді.','The backup contains personal data. Never publish it on GitHub. Auth passwords, sessions and separate Storage files are not included.'],

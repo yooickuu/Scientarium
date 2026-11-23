@@ -2,6 +2,9 @@ import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
+import ts from 'typescript';
+const urlModule=ts.transpileModule(await readFile(new URL('../../src/lib/web-url.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText;
+const {normalizeWebUrl}=await import('data:text/javascript;base64,'+Buffer.from(urlModule).toString('base64'));
 const db=new PGlite();
 const ids={owner:'00000000-0000-4000-8000-000000000001',mod:'00000000-0000-4000-8000-000000000002',user:'00000000-0000-4000-8000-000000000003',other:'00000000-0000-4000-8000-000000000004'};
 async function as(who,sql,args=[]){return db.transaction(async tx=>{
@@ -80,6 +83,19 @@ test('Bookmarks are private and analytics deduplicates visits and excludes staff
  await assert.rejects(rpc('user','admin_stats',[7]),/forbidden/);
  await assert.rejects(as(null,'select * from scientarium_private.visits'),/permission denied/);
  await rpc('owner','delete_event',[modEvent.id]);assert.equal((await as('user','select * from public.bookmarks')).length,0);
+});
+test('Event create/edit saves organizer links after paste normalization; database URL protection remains active',async()=>{
+ const url='https://clck.ru/3WRdNT';
+ for(const raw of [url,url+' ','clck.ru/3WRdNT',`[${url}](${url})`,'HTTPS://CLCK.RU/3WRdNT']){
+  if(raw!==url)assert.equal((await db.query('select scientarium_private.valid_url($1) as valid',[raw])).rows[0].valid,false);
+  const normalized=normalizeWebUrl(raw);assert.equal(normalized.ok,true);
+  const saved=await rpc('owner','save_event',[null,JSON.stringify({...event,registration_url:normalized.value,online_url:normalized.value})]);
+  assert.equal(saved.registration_url,url);assert.equal(saved.online_url,url);
+  const updated=await rpc('owner','save_event',[saved.id,JSON.stringify({registration_url:url+'?source=site&name=event#signup'})]);
+  assert.equal(updated.registration_url,url+'?source=site&name=event#signup');
+  await assert.rejects(rpc('owner','save_event',[saved.id,JSON.stringify({registration_url:'javascript:alert(1)'})]),/invalidInput/);
+  await rpc('owner','delete_event',[saved.id]);
+ }
 });
 test('Legacy profiles restore only after email confirmation, once, and stay private',async()=>{
  await db.exec(await readFile(new URL('../../supabase/restore-legacy.sql',import.meta.url),'utf8'));
