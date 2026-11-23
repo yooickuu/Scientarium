@@ -29,12 +29,12 @@ export default function Navbar() {
             className="rounded-xl transition-transform duration-200 group-hover:scale-105"
             alt="Scientarium Owl"
           />
-          <span className="font-extrabold tracking-tight text-base sm:text-xl text-[var(--ink)] group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+          <span className="header-brand-name font-extrabold tracking-tight text-base sm:text-xl text-[var(--ink)] group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
             SCIENTARIUM
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 mr-4 text-sm font-semibold">
+        <nav className="hidden md:flex order-last lg:order-none w-full lg:w-auto justify-center items-center gap-4 lg:mr-2 text-sm font-semibold">
           <Link
             href="/"
             className={`py-1 transition-colors ${
@@ -71,7 +71,7 @@ export default function Navbar() {
           aria-label={t('language')}
           value={locale}
           onChange={(e) => setLocale(e.target.value as Locale)}
-          className="field !w-[74px] !min-h-[44px] !h-[44px] !py-2 !px-2.5 !text-xs font-bold !rounded-[14px] cursor-pointer hover:border-[#9562ca60] transition-colors"
+          className="field language-select"
         >
           <option value="ru">RU</option>
           <option value="kk">ҚАЗ</option>
@@ -103,7 +103,7 @@ export default function Navbar() {
         <div className="hidden md:block">
           {user ? (
             <Link href="/profile" className="button secondary !min-h-[44px] !py-2 !px-4 !text-xs sm:!text-sm !rounded-[14px]">
-              {user.nickname || t('profile')}
+              <span className="header-profile">{user.nickname || t('profile')}</span>
             </Link>
           ) : (
             <button

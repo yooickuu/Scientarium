@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
   --foreground-rgb: 23, 26, 41;
   --background-rgb: 248, 249, 253;
   --surface: #ffffff;
@@ -14,6 +15,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --foreground-rgb: 241, 243, 250;
   --background-rgb: 15, 17, 26;
   --surface: #191725;
@@ -43,6 +45,8 @@ button, a, input, select, textarea {
   -webkit-tap-highlight-color: transparent;
 }
 button, select {
+  -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 button:disabled {
@@ -111,6 +115,12 @@ button:disabled {
 
 /* Buttons */
 .button {
+  max-width: 100%;
+  min-width: 0;
+  text-align: center;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -179,6 +189,9 @@ button:disabled {
 
 /* Fields & Inputs */
 .field {
+  min-width: 0;
+  max-width: 100%;
+  line-height: 1.4;
   display: block;
   width: 100%;
   border: 1px solid var(--line);
@@ -187,7 +200,7 @@ button:disabled {
   min-height: 44px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: 1rem;
   outline: none;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
@@ -247,7 +260,8 @@ button:disabled {
 
 /* Pills & Filter Badges */
 .pill {
-  min-height: 38px;
+  flex-shrink: 0;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: 12px;
   white-space: nowrap;
@@ -440,6 +454,7 @@ button:disabled {
 }
 
 .form-grid {
+  min-width: 0;
   display: grid;
   gap: 16px;
 }
@@ -459,6 +474,7 @@ button:disabled {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 .avatar {
   width: 68px;
@@ -505,4 +521,48 @@ button:disabled {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Consistent native controls, including Safari; keep the OS picker on phones. */
+select.field {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a789f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  text-overflow: ellipsis;
+}
+select option { background: var(--surface); color: var(--ink); }
+.field[aria-invalid=true] { border-color: #c73555; }
+.field[type=date], .field[type=time] { -webkit-appearance: none; appearance: none; min-height: 48px; }
+.field::-webkit-date-and-time-value { text-align: left; min-height: 1.4em; }
+.field::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .75; }
+.field:focus-visible { outline: 2px solid #9562ca; outline-offset: 2px; }
+.button > svg, .badge > svg { flex-shrink: 0; }
+.form-grid > *, fieldset, .panel > form { min-width: 0; }
+.badge { max-width: 100%; overflow-wrap: anywhere; }
+.language-select { width: 78px; flex-shrink: 0; height: 44px; font-size: .85rem; font-weight: 700; padding-left: 10px; }
+.site-header-inner { flex-wrap: wrap; }
+.header-profile { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.date-time-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(100px, .65fr); gap: 10px; }
+.date-time-group { background: var(--surface-soft); border: 1px solid var(--line); border-radius: 18px; padding: 14px; min-width: 0; }
+.date-time-group legend { padding: 0 5px; font-weight: 650; font-size: .9rem; }
+.password-input { position: relative; }
+.password-input .field { padding-right: 54px; }
+.password-input .icon-button { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; box-shadow: none; }
+@media(max-width: 639px) {
+  .panel { padding: 16px; border-radius: 20px; }
+  .sticky-actions > .button { flex: 1 1 110px; }
+  .date-time-fields { grid-template-columns: minmax(0, 1fr) minmax(100px, .65fr); }
+  .profile-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-actions > .button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media(max-width: 479px) {
+  .site-header-inner { padding: 10px 14px; gap: 8px; }
+  .header-brand-name { display: none; }
+}
+@media(max-width: 359px) {
+  .content { padding-inline: 12px; }
+  .date-time-fields { grid-template-columns: minmax(0, 1fr); }
 }
