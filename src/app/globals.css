@@ -566,3 +566,8 @@ select option { background: var(--surface); color: var(--ink); }
   .content { padding-inline: 12px; }
   .date-time-fields { grid-template-columns: minmax(0, 1fr); }
 }
+@media(max-width: 639px) {
+  /* Keep form actions in flow: the keyboard and bottom nav must not cover fields. */
+  .sticky-actions { position: static; }
+  .sticky-actions > .button { flex: 1 1 auto; white-space: nowrap; overflow-wrap: normal; padding-inline: 14px; }
+}
