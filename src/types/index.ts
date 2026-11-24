@@ -48,6 +48,7 @@ export interface MedicalEvent {
   price_type: 'free' | 'paid';
   price?: string;
   registration_url?: string;
+  registration_deadline?: string | null;
   contact_info?: string;
   image_url?: string;
   is_featured: boolean;

@@ -21,6 +21,7 @@ before(async()=>{
  create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
  grant usage on schema auth to anon,authenticated;grant execute on function auth.uid() to anon,authenticated;`);
  try{await db.exec(await readFile(new URL('../../supabase/migrations/001_scientarium.sql',import.meta.url),'utf8'));}catch(e){throw new Error(e.message+' at '+e.position+' '+(e.where||''));}
+ await db.exec(await readFile(new URL('../../supabase/migrations/003_registration_deadline.sql',import.meta.url),'utf8'));
  for(const [name,id] of Object.entries(ids))await db.query("insert into auth.users(id,email,raw_user_meta_data,email_confirmed_at) values($1,$2,$3,now())",[id,name+'@example.test',JSON.stringify({full_name:name,role:'admin',is_owner:true})]);
  await db.exec("update public.profiles set role='admin',is_owner=true where email='owner@example.test';update public.profiles set role='moderator' where email='mod@example.test'");
 });
@@ -140,4 +141,13 @@ test('Backup exports are owner-only; deletion can be restored with bookmarks and
  for(let i=0;i<4;i++)await db.exec('select scientarium_private.create_daily_backup()');
  assert.equal((await rpc('owner','backup_status')).snapshots,3);
  await assert.rejects(as('user','select * from scientarium_private.backups'),/permission denied/);
+});
+
+test('Registration deadline persists, can be cleared, and obeys event permissions',async()=>{
+ const saved=await rpc('mod','save_event',[null,{...event,registration_deadline:'2026-12-30T10:00:00Z'}]);
+ assert.equal(Date.parse(saved.registration_deadline),Date.parse('2026-12-30T10:00:00Z'));
+ assert.equal((await as(null,'select registration_deadline from public.events where id=$1',[saved.id])).length,1);
+ await assert.rejects(rpc('other','save_event',[saved.id,{registration_deadline:null}]),/forbidden/);
+ await assert.rejects(rpc('mod','save_event',[saved.id,{registration_deadline:'2027-02-01T00:00:00Z'}]),/deadlineError/);
+ assert.equal((await rpc('mod','save_event',[saved.id,{registration_deadline:null}])).registration_deadline,null);
 });

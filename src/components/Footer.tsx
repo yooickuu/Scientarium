@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { University } from '@/types';
@@ -48,7 +49,7 @@ export default function Footer() {
         )}
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs sm:text-sm text-[var(--muted)]">
-          <p>{t('footerText')}</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2"><p>{t('footerText')}</p><Link href="/about" className="font-semibold text-[var(--accent)] py-2">{t('aboutProject')}</Link></div>
           <p className="font-medium text-[11px] sm:text-xs">
             © {new Date().getFullYear()} Scientarium
           </p>

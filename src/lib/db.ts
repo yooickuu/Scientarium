@@ -108,6 +108,7 @@ function getDatabase(): Database.Database {
       CREATE INDEX IF NOT EXISTS analytics_session_time ON analytics_visits(session_hash, created_at);
     `);
     const eventColumns = db.pragma('table_info(events)') as { name: string }[];
+    if (!eventColumns.some((column) => column.name === 'registration_deadline')) db.exec('ALTER TABLE events ADD COLUMN registration_deadline TEXT');
     if (!eventColumns.some((column) => column.name === 'university_id')) db.exec('ALTER TABLE events ADD COLUMN university_id INTEGER REFERENCES universities(id) ON DELETE SET NULL');
     if (!eventColumns.some((column) => column.name === 'translations_json')) db.exec("ALTER TABLE events ADD COLUMN translations_json TEXT NOT NULL DEFAULT '{}'");
     db.exec(`

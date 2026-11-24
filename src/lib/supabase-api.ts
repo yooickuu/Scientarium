@@ -4,7 +4,7 @@ import { basePath } from './paths';
 import type { MedicalEvent, User } from '@/types';
 
 function fail(error: { message: string; code?: string; status?: number }) {
-  const known = ['nicknameCooldown','nicknameTaken','nicknameRules','imageError','invalidInput','forbidden','loginRequired','notFound','ownerProtected','alreadyExists'];
+  const known = ['deadlineError','nicknameCooldown','nicknameTaken','nicknameRules','imageError','invalidInput','forbidden','loginRequired','notFound','ownerProtected','alreadyExists'];
   const code = known.find(value => error.message.includes(value));
   if (code) throw new ApiError(code, code === 'loginRequired' ? 401 : code === 'forbidden' || code === 'ownerProtected' ? 403 : code === 'notFound' ? 404 : 400);
   if (error.code === 'PGRST202') throw new ApiError('serviceUnavailable',503);
@@ -33,7 +33,7 @@ async function requireUser() {
   if (!user) throw new ApiError('loginRequired', 401);
   return user;
 }
-const eventFields = 'id,title,slug,category,organizer_name,university,university_id,specialty,format,city,location,online_url,start_date,end_date,description,program,speakers,target_audience,price_type,price,registration_url,contact_info,image_url,is_featured,created_by,views_count,created_at,translations_json';
+const eventFields = 'id,title,slug,category,organizer_name,university,university_id,specialty,format,city,location,online_url,start_date,end_date,description,program,speakers,target_audience,price_type,price,registration_url,registration_deadline,contact_info,image_url,is_featured,created_by,views_count,created_at,translations_json';
 
 export async function supabaseApi(input: string, options: RequestInit = {}): Promise<any> {
   options.signal?.throwIfAborted();

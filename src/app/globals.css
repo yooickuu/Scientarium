@@ -571,3 +571,8 @@ select option { background: var(--surface); color: var(--ink); }
   .sticky-actions { position: static; }
   .sticky-actions > .button { flex: 1 1 auto; white-space: nowrap; overflow-wrap: normal; padding-inline: 14px; }
 }
+
+.registration-deadline { display: flex; align-items: flex-start; gap: 8px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface-soft); color: var(--accent); font-size: .85rem; line-height: 1.5; margin-bottom: 12px; overflow-wrap: anywhere; }
+.registration-deadline > svg { flex-shrink: 0; margin-top: 2px; }
+.contact-panel { border-color: #9562ca55; background: linear-gradient(125deg, #9562ca0d, transparent), var(--surface); }
+.contact-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: var(--surface-soft); color: var(--accent); }

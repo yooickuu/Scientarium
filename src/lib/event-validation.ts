@@ -5,7 +5,7 @@ import { InputError } from './request-security';
 const textFields = ['title', 'category', 'organizer_name', 'university', 'specialty', 'format', 'city', 'location', 'online_url', 'start_date', 'end_date', 'description', 'program', 'speakers', 'target_audience', 'price_type', 'price', 'registration_url', 'contact_info', 'image_url'];
 
 export function parseEvent(body: Record<string, unknown>, existing?: MedicalEvent): Partial<MedicalEvent> {
-  const clean: Record<string, string | boolean> = {};
+  const clean: Record<string, string | boolean | null> = {};
   for (const field of textFields) {
     if (!(field in body)) continue;
     const value = body[field];
@@ -46,6 +46,11 @@ export function parseEvent(body: Record<string, unknown>, existing?: MedicalEven
       clean.translations_json = JSON.stringify(result);
     } catch { throw new InputError('Некорректный перевод'); }
   }
+  if ('registration_deadline' in body) {
+    const value=body.registration_deadline;
+    if(value!==null&&value!==''&&(typeof value!=='string'||!Number.isFinite(Date.parse(value))))throw new InputError('deadlineError');
+    clean.registration_deadline=value?new Date(value as string).toISOString():null;
+  }
   const event = { ...existing, ...clean } as Partial<MedicalEvent>;
   for (const field of ['title', 'category', 'start_date', 'end_date', 'description', 'location'] as const) {
     if (!event[field]) throw new InputError('Заполните название, категорию, даты, описание и место проведения');
@@ -56,6 +61,7 @@ export function parseEvent(body: Record<string, unknown>, existing?: MedicalEven
   const start = Date.parse(event.start_date!);
   const end = Date.parse(event.end_date!);
   if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) throw new InputError('Проверьте даты начала и окончания');
+  if(event.registration_deadline&&Date.parse(event.registration_deadline)>end)throw new InputError('deadlineError');
   for (const field of ['start_date', 'end_date']) {
     if (typeof clean[field] === 'string') clean[field] = new Date(clean[field]).toISOString();
   }
